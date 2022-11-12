@@ -72,12 +72,7 @@ def main():
 
         data = data.groupby("Fecha").sum(numeric_only=True)
 
-        if chart_type == "Líneas":
-            st.line_chart(data=data, y=variables)
-        elif chart_type == "Área":
-            st.area_chart(data=data, y=variables)
-        elif chart_type == "Barras":
-            st.bar_chart(data=data, y=variables)
+        show_legacy_chart(data=data, chart_type=chart_type, variables=variables)
     else:
         variable = st.sidebar.selectbox("Variable", options=col_names)
         data = (
@@ -109,6 +104,15 @@ def get_data(url, date_format):
 @st.experimental_memo(max_entries=3)
 def get_unique(data, col_name):
     return data[col_name].unique()
+
+
+def show_legacy_chart(data, chart_type, variables):
+    if chart_type == "Líneas":
+        st.line_chart(data=data, y=variables)
+    elif chart_type == "Área":
+        st.area_chart(data=data, y=variables)
+    elif chart_type == "Barras":
+        st.bar_chart(data=data, y=variables)
 
 
 if __name__ == "__main__":
