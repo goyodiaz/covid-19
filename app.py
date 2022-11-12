@@ -5,21 +5,6 @@ import pandas as pd
 import streamlit as st
 
 
-@st.experimental_memo(show_spinner="Downloading and parsing data...", max_entries=1)
-def get_data(url, date_format):
-    data = pd.read_csv(url, sep=";", encoding="latin")[:-5].drop(
-        ["COD_CCAA", "Cod_Provincia"], axis="columns"
-    )
-    data = data.dropna(how="all")
-    data["Fecha"] = pd.to_datetime(data["Fecha"], format=date_format)
-    return data
-
-
-@st.experimental_memo(max_entries=3)
-def get_unique(data, col_name):
-    return data[col_name].unique()
-
-
 def main():
     title = "COVID-19 - Capacidad asistencial"
     st.set_page_config(
@@ -109,6 +94,21 @@ def main():
             st.bar_chart(data)
 
     st.write(data)
+
+
+@st.experimental_memo(show_spinner="Downloading and parsing data...", max_entries=1)
+def get_data(url, date_format):
+    data = pd.read_csv(url, sep=";", encoding="latin")[:-5].drop(
+        ["COD_CCAA", "Cod_Provincia"], axis="columns"
+    )
+    data = data.dropna(how="all")
+    data["Fecha"] = pd.to_datetime(data["Fecha"], format=date_format)
+    return data
+
+
+@st.experimental_memo(max_entries=3)
+def get_unique(data, col_name):
+    return data[col_name].unique()
 
 
 if __name__ == "__main__":
