@@ -96,8 +96,7 @@ def main():
     else:
         variable = st.sidebar.selectbox("Variable", options=col_names)
         data = (
-            data[["Fecha", "Unidad", variable]]
-            .groupby(["Fecha", "Unidad"])
+            data.groupby(["Fecha", "Unidad"])[variable]
             .sum()
             .reset_index()
             .pivot(index="Fecha", columns="Unidad", values=variable)
