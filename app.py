@@ -81,12 +81,8 @@ def main():
             .reset_index()
             .pivot(index="Fecha", columns="Unidad", values=variable)
         )
-        if chart_type == "Líneas":
-            st.line_chart(data)
-        elif chart_type == "Área":
-            st.area_chart(data)
-        elif chart_type == "Barras":
-            st.bar_chart(data)
+
+        show_chart(data=data, chart_type=chart_type)
 
     st.write(data)
 
@@ -113,6 +109,15 @@ def show_legacy_chart(data, chart_type, variables):
         st.area_chart(data=data, y=variables)
     elif chart_type == "Barras":
         st.bar_chart(data=data, y=variables)
+
+
+def show_chart(data, chart_type):
+    if chart_type == "Líneas":
+        st.line_chart(data)
+    elif chart_type == "Área":
+        st.area_chart(data)
+    elif chart_type == "Barras":
+        st.bar_chart(data)
 
 
 if __name__ == "__main__":
