@@ -15,8 +15,13 @@ def main():
     )
     st.title(title)
     date = st.sidebar.date_input("Fecha")
+
+    date_formats = {"%d/%m/%Y": "dd/mm/aaaa", "%m/%d/%Y": "mm/dd/aaaa"}
     date_format = st.sidebar.radio(
-        "Formato de fecha", options=["%d/%m/%Y", "%m/%d/%Y"], horizontal=True
+        label="Formato de fecha",
+        options=date_formats,
+        format_func=lambda x: date_formats[x],
+        horizontal=True,
     )
 
     formatted_date = date.strftime("%d%m%Y")
