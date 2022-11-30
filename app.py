@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import unicodedata
 
 import numpy as np
 import pandas as pd
@@ -99,7 +100,10 @@ def get_data(url, date_format):
 
 @st.experimental_memo(max_entries=3)
 def get_unique(data, col_name):
-    return data[col_name].unique()
+    return sorted(
+        data[col_name].unique(),
+        key=lambda x: unicodedata.normalize("NFKD", x).encode("ascii", "ignore"),
+    )
 
 
 def show_legacy_chart(data, chart_type, variables):
