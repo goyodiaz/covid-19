@@ -87,9 +87,9 @@ def main():
             st.error("Choose at least one variable.")
             st.stop()
 
-        data = data.groupby("Fecha").sum(numeric_only=True)
+        data = data.groupby("Fecha")[variables].sum(numeric_only=True)
 
-        show_legacy_chart(data=data, chart_type=chart_type, variables=variables)
+        show_legacy_chart(data=data, chart_type=chart_type)
 
     st.write(data)
 
@@ -112,13 +112,13 @@ def get_unique(data, col_name):
     )
 
 
-def show_legacy_chart(data, chart_type, variables):
+def show_legacy_chart(data, chart_type):
     if chart_type == "Líneas":
-        st.line_chart(data=data, y=variables)
+        st.line_chart(data=data)
     elif chart_type == "Área":
-        st.area_chart(data=data, y=variables)
+        st.area_chart(data=data)
     elif chart_type == "Barras":
-        st.bar_chart(data=data, y=variables)
+        st.bar_chart(data=data)
 
 
 def show_chart(data, chart_type):
