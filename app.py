@@ -51,7 +51,7 @@ def main():
     col_names = data.columns.drop(["Fecha", "Unidad", "CCAA", "Provincia"])
 
     chart_type = st.sidebar.radio(
-        "Tipo de gráfico", options=["Líneas", "Área", "Barras"], horizontal=True
+        label="Tipo de gráfico", options=["Líneas", "Área", "Barras"], horizontal=True
     )
 
     min_date = data["Fecha"].iloc[0].date()
@@ -68,18 +68,9 @@ def main():
 
     data = data[data["Fecha"].between(pd.Timestamp(start_date), pd.Timestamp(end_date))]
 
-    legacy_plot = st.sidebar.checkbox(label="Legacy plot")
-    if legacy_plot:
-        variables = st.sidebar.multiselect("Variables", options=col_names)
+    per_unit = st.sidebar.checkbox(label="Por unidad de hospitalización")
 
-        if not variables:
-            st.error("Choose at least one variable.")
-            st.stop()
-
-        data = data.groupby("Fecha").sum(numeric_only=True)
-
-        show_legacy_chart(data=data, chart_type=chart_type, variables=variables)
-    else:
+    if per_unit:
         variable = st.sidebar.selectbox("Variable", options=col_names)
         data = (
             data.groupby(["Fecha", "Unidad"])[variable]
@@ -89,6 +80,16 @@ def main():
         )
 
         show_chart(data=data, chart_type=chart_type)
+    else:
+        variables = st.sidebar.multiselect("Variables", options=col_names)
+
+        if not variables:
+            st.error("Choose at least one variable.")
+            st.stop()
+
+        data = data.groupby("Fecha").sum(numeric_only=True)
+
+        show_legacy_chart(data=data, chart_type=chart_type, variables=variables)
 
     st.write(data)
 
