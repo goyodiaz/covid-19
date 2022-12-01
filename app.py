@@ -47,8 +47,6 @@ def main():
     if group:
         data = data[data[by] == region]
 
-    col_names = data.columns.drop(["Fecha", "Unidad", "CCAA", "Provincia"])
-
     chart_type = st.sidebar.radio(
         label="Tipo de gráfico", options=["Líneas", "Área", "Barras"], horizontal=True
     )
@@ -70,6 +68,7 @@ def main():
     st.text(f"{start_date} - {end_date}")
 
     data = data[data["Fecha"].between(pd.Timestamp(start_date), pd.Timestamp(end_date))]
+    col_names = data.columns.drop(["Fecha", "Unidad", "CCAA", "Provincia"])
 
     if per_unit:
         variable = st.sidebar.selectbox("Variable", options=col_names)
