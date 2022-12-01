@@ -78,18 +78,14 @@ def main():
             .reset_index()
             .pivot(index="Fecha", columns="Unidad", values=variable)
         )
-
-        show_chart(data=data, chart_type=chart_type)
     else:
         variables = st.sidebar.multiselect("Variables", options=col_names)
-
         if not variables:
             st.error("Choose at least one variable.")
             st.stop()
-
         data = data.groupby("Fecha")[variables].sum(numeric_only=True)
 
-        show_legacy_chart(data=data, chart_type=chart_type)
+    show_chart(data=data, chart_type=chart_type)
 
     st.write(data)
 
@@ -110,15 +106,6 @@ def get_unique(data, col_name):
         data[col_name].unique(),
         key=lambda x: unicodedata.normalize("NFKD", x).encode("ascii", "ignore"),
     )
-
-
-def show_legacy_chart(data, chart_type):
-    if chart_type == "Líneas":
-        st.line_chart(data=data)
-    elif chart_type == "Área":
-        st.area_chart(data=data)
-    elif chart_type == "Barras":
-        st.bar_chart(data=data)
 
 
 def show_chart(data, chart_type):
