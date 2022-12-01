@@ -81,7 +81,7 @@ def main():
     else:
         variables = st.sidebar.multiselect("Variables", options=col_names)
         if not variables:
-            st.error("Choose at least one variable.")
+            st.error("Selecciona una o varias variables.")
             st.stop()
         data = data.groupby("Fecha")[variables].sum(numeric_only=True)
 
