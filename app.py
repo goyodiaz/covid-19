@@ -13,8 +13,12 @@ def main():
         layout="wide",
         menu_items={"About": "Hecho por Goyo con mucho trabajo."},
     )
-    st.title(title)
     date = st.sidebar.date_input("Fecha")
+    
+    formatted_date = date.strftime("%d%m%Y")
+    url = f"https://www.sanidad.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov/documentos/Datos_Capacidad_Asistencial_Historico_{formatted_date}.csv"
+
+    st.sidebar.markdown(f"[Datos originales]({url})")
 
     date_formats = {"%d/%m/%Y": "dd/mm/aaaa", "%m/%d/%Y": "mm/dd/aaaa"}
     date_format = st.sidebar.radio(
@@ -23,11 +27,6 @@ def main():
         format_func=lambda x: date_formats[x],
         horizontal=True,
     )
-
-    formatted_date = date.strftime("%d%m%Y")
-    url = f"https://www.sanidad.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov/documentos/Datos_Capacidad_Asistencial_Historico_{formatted_date}.csv"
-
-    st.sidebar.markdown(f"[Datos originales]({url})")
 
     group = st.sidebar.checkbox("Agrupar")
     by = st.sidebar.radio(
@@ -54,6 +53,10 @@ def main():
         label="Tipo de gráfico", options=["Líneas", "Área", "Barras"], horizontal=True
     )
 
+    per_unit = st.sidebar.checkbox(label="Por unidad de hospitalización")
+
+    st.title(title)
+
     min_date = data["Fecha"].iloc[0].date()
     max_date = data["Fecha"].iloc[-1].date()
 
@@ -67,8 +70,6 @@ def main():
     st.text(f"{start_date} - {end_date}")
 
     data = data[data["Fecha"].between(pd.Timestamp(start_date), pd.Timestamp(end_date))]
-
-    per_unit = st.sidebar.checkbox(label="Por unidad de hospitalización")
 
     if per_unit:
         variable = st.sidebar.selectbox("Variable", options=col_names)
