@@ -85,8 +85,8 @@ def main():
             st.stop()
         data = data.groupby("Fecha")[variables].sum(numeric_only=True)
 
+    data = data.astype(int)
     show_chart(data=data, chart_type=chart_type)
-
     st.write(data)
 
 
