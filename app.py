@@ -19,12 +19,16 @@ def main():
 
     st.sidebar.markdown(f"[Datos originales]({url})")
 
-    date_formats = {"%d/%m/%Y": "dd/mm/aaaa", "%m/%d/%Y": "mm/dd/aaaa"}
-    date_format = st.sidebar.radio(
+    date_formats = {
+        "%d/%m/%Y": "dd/mm/aaaa",
+        "%m/%d/%Y": "mm/dd/aaaa",
+        "%Y-%m-%d": "aaaa-mm-dd",
+    }
+
+    date_format = st.sidebar.selectbox(
         label="Formato de fecha",
         options=date_formats,
         format_func=lambda x: date_formats[x],
-        horizontal=True,
     )
 
     group = st.sidebar.checkbox("Agrupar")
