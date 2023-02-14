@@ -99,7 +99,7 @@ def main():
     st.write(data)
 
 
-@st.experimental_memo(show_spinner="Downloading and parsing data...", max_entries=1)
+@st.cache_resource(show_spinner="Downloading and parsing data...")
 def get_data(url, date_format):
     data = pd.read_csv(url, sep=";", encoding="latin")[:-5].drop(
         ["COD_CCAA", "Cod_Provincia"], axis="columns"
@@ -109,7 +109,7 @@ def get_data(url, date_format):
     return data
 
 
-@st.experimental_memo(max_entries=3)
+@st.cache_resource()
 def get_unique(data, col_name):
     return sorted(
         data[col_name].unique(),
