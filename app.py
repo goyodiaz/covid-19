@@ -25,7 +25,11 @@ def main():
         "%Y-%m-%d": "aaaa-mm-dd",
     }
 
-    date_format = st.sidebar.selectbox(
+    col1, col2 = st.sidebar.columns(2)
+    separator = col1.text_input(
+        label="Separador", value=";", max_chars=1, autocomplete="on"
+    )
+    date_format = col2.selectbox(
         label="Formato de fecha",
         options=date_formats,
         format_func=lambda x: date_formats[x],
@@ -41,7 +45,7 @@ def main():
     )
 
     try:
-        data = get_data(url=url, date_format=date_format)
+        data = get_data(url=url, sep=separator, date_format=date_format)
     except urllib.error.HTTPError as e:
         st.error(f"No se encontraron datos para el día {date}. Selecciona otra fecha.")
         st.stop()
@@ -100,11 +104,12 @@ def main():
 
 
 @st.cache_resource(show_spinner="Downloading and parsing data...")
-def get_data(url, date_format):
-    data = pd.read_csv(url, sep=";", encoding="latin")[:-5].drop(
-        ["COD_CCAA", "Cod_Provincia"], axis="columns"
+def get_data(url, sep, date_format):
+    data = (
+        pd.read_csv(url, sep=sep, encoding="latin")[:-5]
+        .drop(["COD_CCAA", "Cod_Provincia"], axis="columns")
+        .dropna(how="all")
     )
-    data = data.dropna(how="all")
     data["Fecha"] = pd.to_datetime(data["Fecha"], format=date_format)
     return data
 
