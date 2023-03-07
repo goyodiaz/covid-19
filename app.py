@@ -50,6 +50,7 @@ def main():
         st.error(f"No se encontraron datos para el día {date}. Selecciona otra fecha.")
         st.stop()
     options = get_unique(data=data, col_name=by)
+    start, end = data["Fecha"].iloc[[0, -1]].dt.date
 
     region = st.sidebar.selectbox(
         by, options, disabled=not group, label_visibility="collapsed"
@@ -66,19 +67,15 @@ def main():
 
     st.title(title)
 
-    min_date = data["Fecha"].iloc[0].date()
-    max_date = data["Fecha"].iloc[-1].date()
-
-    start_date, end_date = st.slider(
+    start, end = st.slider(
         label="Interval",
-        min_value=min_date,
-        max_value=max_date,
-        value=(min_date, max_date),
+        min_value=start,
+        max_value=end,
+        value=(start, end),
         label_visibility="collapsed",
     )
-    st.text(f"{start_date} - {end_date}")
 
-    data = data[data["Fecha"].between(pd.Timestamp(start_date), pd.Timestamp(end_date))]
+    data = data[data["Fecha"].between(pd.Timestamp(start), pd.Timestamp(end))]
     col_names = data.columns.drop(["Fecha", "Unidad", "CCAA", "Provincia"])
 
     if per_unit:
