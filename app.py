@@ -100,6 +100,10 @@ def main():
     st.write(data)
 
 
+class InvalidDateFormatError(ValueError):
+    pass
+
+
 @st.cache_resource(show_spinner="Downloading and parsing data...")
 def get_data(url, sep, date_format):
     data = (
@@ -107,7 +111,10 @@ def get_data(url, sep, date_format):
         .drop(["COD_CCAA", "Cod_Provincia"], axis="columns")
         .dropna(how="all")
     )
-    data["Fecha"] = pd.to_datetime(data["Fecha"], format=date_format)
+    try:
+        data["Fecha"] = pd.to_datetime(data["Fecha"], format=date_format)
+    except ValueError as e:
+        raise InvalidDateFormatError(e.args[0])
     return data
 
 
