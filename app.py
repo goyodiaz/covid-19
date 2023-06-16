@@ -15,7 +15,10 @@ def main():
     date = st.sidebar.date_input("Fecha")
 
     formatted_date = date.strftime("%d%m%Y")
-    url = f"https://www.sanidad.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov/documentos/Datos_Capacidad_Asistencial_Historico_{formatted_date}.csv"
+    if date <= pd.Timestamp("2023-06-13").date():
+        url = f"https://www.sanidad.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov/documentos/Datos_Capacidad_Asistencial_Historico_{formatted_date}.csv"
+    else:
+        url = f"https://www.sanidad.gob.es/areas/alertasEmergenciasSanitarias/alertasActuales/nCov/documentos/Datos_Capacidad_Asistencial_Historico_{formatted_date}.csv"
 
     st.sidebar.markdown(f"[Datos originales]({url})")
 
