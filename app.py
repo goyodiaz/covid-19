@@ -96,7 +96,7 @@ def main():
     st.write(data)
 
 
-class InvalidDateFormatError(ValueError):
+class DateFormatError(ValueError):
     pass
 
 
@@ -119,7 +119,7 @@ def get_data(url, sep, date_format):
     try:
         data["Fecha"] = pd.to_datetime(data["Fecha"], format=date_format)
     except ValueError as e:
-        raise InvalidDateFormatError(e.args[0])
+        raise DateFormatError(e.args[0])
     return data
 
 
