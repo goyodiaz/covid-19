@@ -12,26 +12,19 @@ def main():
         layout="wide",
         menu_items={"About": "Hecho por Goyo con mucho trabajo."},
     )
+
     date = st.sidebar.date_input("Fecha")
-
-    formatted_date = date.strftime("%d%m%Y")
-    if date <= pd.Timestamp("2023-06-13").date():
-        url = f"https://www.sanidad.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov/documentos/Datos_Capacidad_Asistencial_Historico_{formatted_date}.csv"
-    else:
-        url = f"https://www.sanidad.gob.es/areas/alertasEmergenciasSanitarias/alertasActuales/nCov/documentos/Datos_Capacidad_Asistencial_Historico_{formatted_date}.csv"
-
+    url = get_url(date=date)
     st.sidebar.markdown(f"[Datos originales]({url})")
-
+    col1, col2 = st.sidebar.columns(2)
+    separator = col1.text_input(
+        label="Separador", value=";", max_chars=1, autocomplete="on"
+    )
     date_formats = {
         "%d/%m/%Y": "dd/mm/aaaa",
         "%m/%d/%Y": "mm/dd/aaaa",
         "%Y-%m-%d": "aaaa-mm-dd",
     }
-
-    col1, col2 = st.sidebar.columns(2)
-    separator = col1.text_input(
-        label="Separador", value=";", max_chars=1, autocomplete="on"
-    )
     date_format = col2.selectbox(
         label="Formato de fecha",
         options=date_formats,
@@ -105,6 +98,15 @@ def main():
 
 class InvalidDateFormatError(ValueError):
     pass
+
+
+def get_url(date):
+    formatted_date = date.strftime("%d%m%Y")
+    if date <= pd.Timestamp("2023-06-13").date():
+        url = f"https://www.sanidad.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov/documentos/Datos_Capacidad_Asistencial_Historico_{formatted_date}.csv"
+    else:
+        url = f"https://www.sanidad.gob.es/areas/alertasEmergenciasSanitarias/alertasActuales/nCov/documentos/Datos_Capacidad_Asistencial_Historico_{formatted_date}.csv"
+    return url
 
 
 @st.cache_resource(show_spinner="Downloading and parsing data...")
