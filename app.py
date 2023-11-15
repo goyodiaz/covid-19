@@ -77,9 +77,6 @@ def main():
             st.stop()
         data = data.groupby("Fecha")[variables].sum(numeric_only=True)
 
-    # XXX The docstring says downcast should be a dict but the code
-    # XXX says otherwise (pandas 1.5.2).
-    data = data.fillna(0, downcast="int")
     show_chart(data=data, chart_type=chart_type)
     st.write(data)
 
