@@ -4,6 +4,8 @@ import urllib
 import pandas as pd
 import streamlit as st
 
+DATA_URL = "https://www.sanidad.gob.es/areas/alertasEmergenciasSanitarias/alertasActuales/nCov/documentos/Datos_Capacidad_Asistencial_Historico_14072023.csv"
+
 
 def main():
     title = "COVID-19 - Capacidad asistencial"
@@ -13,9 +15,7 @@ def main():
         menu_items={"About": "Hecho por Goyo con mucho trabajo."},
     )
 
-    date = pd.Timestamp("2023-07-14").date()
-    url = get_url(date=date)
-    st.sidebar.markdown(f"[Datos originales]({url})")
+    st.sidebar.markdown(f"[Datos originales]({DATA_URL})")
     separator = ";"
     date_format = "%d/%m/%Y"
 
@@ -29,7 +29,7 @@ def main():
     )
 
     try:
-        data = get_data(url=url, sep=separator, date_format=date_format)
+        data = get_data()
     except urllib.error.HTTPError as e:
         st.error(f"No se pudieron descargar los datos.")
         st.stop()
@@ -85,20 +85,15 @@ class DateFormatError(ValueError):
     pass
 
 
-def get_url(date):
-    formatted_date = date.strftime("%d%m%Y")
-    return f"https://www.sanidad.gob.es/areas/alertasEmergenciasSanitarias/alertasActuales/nCov/documentos/Datos_Capacidad_Asistencial_Historico_{formatted_date}.csv"
-
-
 @st.cache_resource(show_spinner="Downloading and parsing data...")
-def get_data(url, sep, date_format):
+def get_data():
     data = (
-        pd.read_csv(url, sep=sep, encoding="latin")[:-5]
+        pd.read_csv(DATA_URL, sep=";", encoding="latin")[:-5]
         .drop(["COD_CCAA", "Cod_Provincia"], axis="columns")
         .dropna(how="all")
     )
     try:
-        data["Fecha"] = pd.to_datetime(data["Fecha"], format=date_format)
+        data["Fecha"] = pd.to_datetime(data["Fecha"], format="%d/%m/%Y")
     except ValueError as e:
         raise DateFormatError(e.args[0])
     return data
