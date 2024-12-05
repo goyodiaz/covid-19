@@ -1,5 +1,4 @@
 import unicodedata
-import urllib
 
 import pandas as pd
 import streamlit as st
@@ -34,11 +33,7 @@ def main():
         label_visibility="collapsed",
     )
 
-    try:
-        data = get_data()
-    except urllib.error.HTTPError as e:
-        st.error(f"No se pudieron descargar los datos.")
-        st.stop()
+    data = get_data()
     options = get_unique(data=data, col_name=by)
     start, end = data["Fecha"].iloc[[0, -1]].dt.date
 
@@ -87,10 +82,6 @@ def main():
     st.dataframe(data)
 
 
-class DateFormatError(ValueError):
-    pass
-
-
 @st.cache_resource(show_spinner="Downloading and parsing data...")
 def get_data():
     data = (
@@ -98,10 +89,7 @@ def get_data():
         .drop(["COD_CCAA", "Cod_Provincia"], axis="columns")
         .dropna(how="all")
     )
-    try:
-        data["Fecha"] = pd.to_datetime(data["Fecha"], format="%d/%m/%Y")
-    except ValueError as e:
-        raise DateFormatError(e.args[0])
+    data["Fecha"] = pd.to_datetime(data["Fecha"], format="%d/%m/%Y")
     return data
 
 
