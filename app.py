@@ -19,14 +19,11 @@ def main():
 
     with open(DATA_URL, "rb") as file:
         st.sidebar.download_button(
-            label="Download data",
+            label="Descargar datos",
             data=file,
             file_name=DATA_URL,
             icon=":material/download_2:",
         )
-
-    separator = ";"
-    date_format = "%d/%m/%Y"
 
     group = st.sidebar.checkbox("Agrupar")
     by = st.sidebar.radio(
