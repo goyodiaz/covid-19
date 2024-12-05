@@ -51,6 +51,11 @@ def main():
     per_unit = st.sidebar.checkbox(label="Por unidad de hospitalización")
 
     st.title(title)
+    st.markdown(
+        "Elaborado a partir de los [datos abiertos de capacidad asistencial]("
+        "https://www.sanidad.gob.es/areas/alertasEmergenciasSanitarias/alertasActuales/nCov/capacidadAsistencial.htm"
+        ") publicados por el Ministerio de Sanidad."
+    )
 
     start, end = st.slider(
         label="Interval",
@@ -105,7 +110,7 @@ def show_chart(data, chart_type):
     if chart_type == "Líneas":
         st.line_chart(data)
     elif chart_type == "Área":
-        st.area_chart(data)
+        st.area_chart(data, stack=True)
     elif chart_type == "Barras":
         st.bar_chart(data)
 
