@@ -4,7 +4,9 @@ import urllib
 import pandas as pd
 import streamlit as st
 
-DATA_URL = "https://www.sanidad.gob.es/areas/alertasEmergenciasSanitarias/alertasActuales/nCov/documentos/Datos_Capacidad_Asistencial_Historico_14072023.csv"
+# original data:
+# https://www.sanidad.gob.es/areas/alertasEmergenciasSanitarias/alertasActuales/nCov/documentos/Datos_Capacidad_Asistencial_Historico_14072023.csv
+DATA_URL = "Datos_Capacidad_Asistencial_Historico_14072023.csv"
 
 
 def main():
