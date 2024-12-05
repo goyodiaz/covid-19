@@ -17,7 +17,14 @@ def main():
         menu_items={"About": "Hecho por Goyo con mucho trabajo."},
     )
 
-    st.sidebar.markdown(f"[Datos originales]({DATA_URL})")
+    with open(DATA_URL, "rb") as file:
+        st.sidebar.download_button(
+            label="Download data",
+            data=file,
+            file_name=DATA_URL,
+            icon=":material/download_2:",
+        )
+
     separator = ";"
     date_format = "%d/%m/%Y"
 
